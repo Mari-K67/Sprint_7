@@ -3,7 +3,7 @@ import allure
 import api_requests
 import helpers
 from data import OderInformation
-#python -B -m pytest tests/create_oder.py
+#python -B -m pytest tests/test_create_oder.py
 
 class TestCreateOder:
     @allure.title('Проверка создания заказа в зависимости от выбранного цвета')

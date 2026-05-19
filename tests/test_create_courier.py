@@ -3,7 +3,7 @@ import allure
 import api_requests
 import helpers
 from data import ResponseBody
-#python -B -m pytest tests/create_courier.py
+#python -B -m pytest tests/test_create_courier.py
 
 class TestCreateCourier:
     @allure.title('Успешное создание курьера')
