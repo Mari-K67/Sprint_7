@@ -7,8 +7,8 @@ from data import Url
 def create_courier(body):
     return requests.post(Url.create_courier_url, data=body)
 
-@allure.step('запрос на получение id курьера по логину и паролю(логин курьера в системе)')
-def return_courier_id(body):
+@allure.step('запрос на авторизацию курьера в системе (возвращает id)')
+def login_courier(body):
     return requests.post(Url.courier_login_in_sistem_url, data=body)
 
 @allure.step('запрос на создание заказа')
@@ -18,3 +18,7 @@ def create_oder(body):
 @allure.step('запрос на получение списка заказов')
 def get_oder_list():
     return requests.get(Url.get_oder_list_url)
+
+@allure.step('запрос на удаление курьера')
+def delete_courier(id):
+    return requests.delete(f'{Url.delete_courier}{id}')

@@ -1,6 +1,5 @@
 import allure
 import api_requests
-#python -B -m pytest tests/test_get_oder_list.py
 
 class TestGetOderList:
     @allure.title('Проверка, что тело возвращает список заказов')

@@ -3,7 +3,6 @@ import allure
 import api_requests
 import helpers
 from data import ResponseBody
-#python -B -m pytest tests/test_courier_login.py
 
 class TestCourierLogin:
     @allure.title('Успешная авторизация курьера')
@@ -11,10 +10,10 @@ class TestCourierLogin:
                         1. запрос возвращает код ответа 200;
                         2. запрос возвращает id
                         """)
-    def test_login_courier_succeed(self):
-        body = helpers.create_courier_payload(login=None, password=None)
+    def test_login_courier_succeed(self, created_courier_fixture):
+        body = created_courier_fixture(login=None, password=None)
         api_requests.create_courier(body)
-        response_2= api_requests.return_courier_id(body)
+        response_2= api_requests.login_courier(body)
         assert response_2.status_code == 200
         assert 'id' in response_2.text
 
@@ -23,10 +22,10 @@ class TestCourierLogin:
                         1. запрос возвращает код ответа 400;
                         2. запрос возвращает {"code": 400,"message": "Недостаточно данных для входа"}
                         """)
-    def test_login_courier_without_login(self):
-        body = helpers.create_courier_payload(login='', password=None)
+    def test_login_courier_without_login(self, created_courier_fixture):
+        body = created_courier_fixture(login='', password=None)
         api_requests.create_courier(body)
-        response_2= api_requests.return_courier_id(body)
+        response_2= api_requests.login_courier(body)
         assert response_2.status_code == 400
         assert response_2.json() == ResponseBody.login_courier_code_400_release
 
@@ -35,10 +34,10 @@ class TestCourierLogin:
                         1. запрос возвращает код ответа 400;
                         2. запрос возвращает {"code": 400,"message": "Недостаточно данных для входа"}
                         """)
-    def test_login_courier_without_password(self):
-        body = helpers.create_courier_payload(login=None, password='')
+    def test_login_courier_without_password(self, created_courier_fixture):
+        body = created_courier_fixture(login=None, password='')
         api_requests.create_courier(body)
-        response_2= api_requests.return_courier_id(body)
+        response_2= api_requests.login_courier(body)
         assert response_2.status_code == 400
         assert response_2.json() == ResponseBody.login_courier_code_400_release
 
@@ -47,11 +46,11 @@ class TestCourierLogin:
                         1. запрос возвращает код ответа 404;
                         2. запрос возвращает {"code": 404,"message": "Учетная запись не найдена"}
                         """)
-    def test_login_courier_with_wrong_login(self):
-        body_with_correct_login = helpers.create_courier_payload(login='ninja', password=None)
-        body_with_wrong_login = helpers.create_courier_payload(login='ninja_11', password=None)
+    def test_login_courier_with_wrong_login(self, created_courier_fixture):
+        body_with_correct_login = created_courier_fixture(login='ninja', password='1234')
+        body_with_wrong_login = created_courier_fixture(login='ninja_11', password='1234')
         api_requests.create_courier(body_with_correct_login)
-        response_2= api_requests.return_courier_id(body_with_wrong_login)
+        response_2= api_requests.login_courier(body_with_wrong_login)
         assert response_2.status_code == 404
         assert response_2.json() == ResponseBody.login_courier_code_404_release
 
@@ -60,11 +59,11 @@ class TestCourierLogin:
                         1. запрос возвращает код ответа 404;
                         2. запрос возвращает {"code": 404,"message": "Учетная запись не найдена"}
                         """)
-    def test_login_courier_with_wrong_password(self):
-        body_with_correct_login = helpers.create_courier_payload(login=None, password='1234')
-        body_with_wrong_login = helpers.create_courier_payload(login=None, password='12347')
+    def test_login_courier_with_wrong_password(self, created_courier_fixture):
+        body_with_correct_login = created_courier_fixture(login='ninja', password='1234')
+        body_with_wrong_login = created_courier_fixture(login='ninja', password='12347')
         api_requests.create_courier(body_with_correct_login)
-        response_2= api_requests.return_courier_id(body_with_wrong_login)
+        response_2= api_requests.login_courier(body_with_wrong_login)
         assert response_2.status_code == 404
         assert response_2.json() == ResponseBody.login_courier_code_404_release
 
@@ -75,6 +74,6 @@ class TestCourierLogin:
                         """)
     def test_login_courier_with_nonexistent_login_and_password(self):
         body = helpers.create_courier_payload(login=None, password=None)
-        response_2= api_requests.return_courier_id(body)
+        response_2= api_requests.login_courier(body)
         assert response_2.status_code == 404
         assert response_2.json() == ResponseBody.login_courier_code_404_release

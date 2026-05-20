@@ -13,6 +13,9 @@ class Url:
     #ручка получение списка заказов
     get_oder_list_url = f'{main_url}/api/v1/orders'
 
+    #ручка удаление курьера (без id)
+    delete_courier = f'{main_url}/api/v1/courier/:'
+
 class ResponseBody:
     #ручка создание курьера; код 201
     create_courier_code_201 = {"ok": True}
